@@ -1,4 +1,3 @@
-
 import os
 import requests
 import xml.etree.ElementTree as ET
@@ -8,7 +7,8 @@ GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
 LINKEDIN_TOKEN = os.environ.get("LINKEDIN_ACCESS_TOKEN")
 
 def fetch_gst_news():
-    url = "https://news.google.com/rss/search?q=GST+India&hl=en-IN&gl=IN&ceid=IN:en"
+    # ✅ Better search query to filter real GST policy news
+    url = "https://news.google.com/rss/search?q=GST+India+tax+amendment+council&hl=en-IN&gl=IN&ceid=IN:en"
     try:
         response = requests.get(url, timeout=10)
         if response.status_code == 200:
@@ -21,7 +21,8 @@ def fetch_gst_news():
     return None, None
 
 def ask_gemini_to_draft(title, link):
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_KEY}"
+    # ✅ Updated to gemini-2.0-flash
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_KEY}"
     prompt = (
         f"Analyze this GST News: '{title}'. "
         f"If it is an important update or amendment, draft an engaging LinkedIn post summarizing it. "
@@ -31,7 +32,12 @@ def ask_gemini_to_draft(title, link):
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     try:
         response = requests.post(url, json=payload, timeout=15)
-        text_output = response.json()['candidates'][0]['content']['parts'][0]['text']
+        result = response.json()
+        # ✅ Better error handling to show exact Gemini response
+        if 'candidates' not in result:
+            print(f"[ERROR] Gemini unexpected response: {result}")
+            return "SKIP"
+        text_output = result['candidates'][0]['content']['parts'][0]['text']
         return text_output.strip()
     except Exception as e:
         print(f"[ERROR] Gemini API failed: {e}")
@@ -52,7 +58,6 @@ def post_to_linkedin(content):
     if not user_id:
         print("[ERROR] Aborting post — no LinkedIn user ID.")
         return
-
     url = "https://api.linkedin.com/v2/ugcPosts"
     headers = {
         "Authorization": f"Bearer {LINKEDIN_TOKEN}",

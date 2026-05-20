@@ -1,9 +1,8 @@
 name: Run GST Agent 24/7
-
 on:
   schedule:
-    - cron: '0 */3 * * *' # This tells GitHub to run your agent every 3 hours automatically
-  workflow_dispatch: # This allows you to run it manually anytime you want
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
 
 jobs:
   run-agent:
@@ -15,7 +14,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-node: '3.10'
+          python-version: '3.10'
 
       - name: Install Dependencies
         run: pip install requests
@@ -23,6 +22,5 @@ jobs:
       - name: Run Agent Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
-          LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
         run: python agent.py

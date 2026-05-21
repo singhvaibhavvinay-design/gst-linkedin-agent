@@ -1,0 +1,29 @@
+name: Run Tech & Law Agent 24/7
+
+on:
+  schedule:
+    - cron: '0 10 * * *'   # runs daily at 10 AM UTC (3:30 PM IST)
+                            # 1 hour after GST agent so posts are spaced out
+  workflow_dispatch:        # allows manual run from Actions tab
+
+jobs:
+  run-tech-law-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install requests groq
+
+      - name: Run Tech & Law Agent
+        env:
+          GROQ_API_KEY:          ${{ secrets.GROQ_API_KEY }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: python tech_law_agent.py

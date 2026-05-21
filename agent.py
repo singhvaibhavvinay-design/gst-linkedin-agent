@@ -32,10 +32,25 @@ def ask_groq_to_draft(title, link):
     prompt = (
         f"Analyze this GST News: '{title}'. "
         f"If it is an important update or amendment for Indian businesses, "
-        f"draft an engaging LinkedIn post summarizing it. "
-        f"Include relevant hashtags like #GST #Tax #India #Business and the link: {link}. "
-        f"Keep it under 300 words with bullet points. "
-        f"If it is NOT important, reply exactly with the single word 'SKIP'."
+        f"draft an engaging LinkedIn post following this exact structure:\n\n"
+        f"1. HOOK LINE — one powerful opening sentence to grab attention\n"
+        f"2. SUMMARY — 2-3 sentences explaining what changed\n"
+        f"3. IMPACT BULLETS — 3 to 5 bullet points starting with an emoji, "
+        f"explaining the impact on businesses, taxpayers, or specific industries\n"
+        f"4. CALL TO ACTION — one line encouraging readers to act or comment\n"
+        f"5. LINK — {link}\n"
+        f"6. HASHTAGS — end with 10 to 15 relevant hashtags chosen from this list "
+        f"based on what the news is actually about:\n"
+        f"   Always include: #GST #GSTIndia #Tax #IndiaFinance #TaxUpdate\n"
+        f"   Add if about filing/returns: #GSTReturn #GSTR1 #GSTR3B #ITR #TaxFiling\n"
+        f"   Add if about businesses: #SME #MSMEs #StartupIndia #IndianBusiness #Entrepreneurs\n"
+        f"   Add if about e-invoicing/tech: #EInvoicing #DigitalIndia #TaxTech\n"
+        f"   Add if about rates/slabs: #GSTRates #TaxSlab #IndirectTax\n"
+        f"   Add if about council meeting: #GSTCouncil #FinanceMinistry #NirmalaSitharaman\n"
+        f"   Add if about compliance: #TaxCompliance #CFO #Accounting #Finance\n"
+        f"   Always end with: #IndianEconomy #BusinessIndia\n\n"
+        f"Keep the total post under 300 words. "
+        f"If the news is NOT important, reply exactly with the single word 'SKIP'."
     )
     payload = {
         "model": "llama-3.3-70b-versatile",
@@ -45,7 +60,9 @@ def ask_groq_to_draft(title, link):
                 "content": (
                     "You are an expert GST tax consultant in India. "
                     "You write clear, professional, and engaging LinkedIn posts "
-                    "for Indian businesses about GST updates."
+                    "for Indian businesses about GST updates. "
+                    "Always follow the exact post structure given to you. "
+                    "Always end every post with 10-15 relevant hashtags on the last line."
                 )
             },
             {

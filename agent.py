@@ -105,7 +105,7 @@ def ask_groq_to_draft(title, link):
         f"If the news is NOT important, reply exactly with the single word 'SKIP'."
     )
     payload = {
-        model="openai/gpt-oss-120b",
+        "model": "openai/gpt-oss-120b",
         "messages": [
             {
                 "role": "system",
